@@ -25,8 +25,12 @@ const matcapTexture = textureLoader.load('textures/matcaps/9.png')
 /**
  * Fonts
  */
-
 const fontLoader = new FontLoader()
+
+// Meshes outside fontloader
+const donuts = []
+let text
+
 fontLoader.load(
     '/fonts/helvetiker_regular.typeface.json',
     (font) => {
@@ -48,7 +52,7 @@ fontLoader.load(
 
         const material = new THREE.MeshMatcapMaterial()
         material.matcap = matcapTexture
-        const text = new THREE.Mesh(textGeometry, material)
+        text = new THREE.Mesh(textGeometry, material)
         scene.add(text)
 
         const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
@@ -75,9 +79,9 @@ fontLoader.load(
             donut.scale.set(scale, scale, scale)
         
             scene.add(donut)
+            donuts.push(donut)
         }
         
-
     }
 )
 
@@ -111,7 +115,7 @@ window.addEventListener('resize', () =>
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 1
 camera.position.y = 1
-camera.position.z = 2
+camera.position.z = 3
 scene.add(camera)
 
 
@@ -141,6 +145,11 @@ window.addEventListener('mousemove', (event) => {
  */
 const clock = new THREE.Clock()
 
+let targetRotationZ = 0; // Obiettivo di rotazione
+let rotationSpeed = 0.005; // Velocità di rotazione
+const maxRotation = 0.5; // Limite di rotazione
+const minRotation = -0.5; // Limite di rotazione
+
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
@@ -151,8 +160,22 @@ const tick = () =>
     gsap.to(camera.position, {x: parallaxX, duration: 1.5});
     gsap.to(camera.position, {y: parallaxY, duration: 1.5});
     camera.lookAt(0,0,0)
-    //camera.position.z = parallaxY + 1 
 
+    // Rotate donuts
+    donuts.forEach((donut) => {
+        donut.rotation.x += 0.0009 
+        donut.rotation.y += 0.0012 
+    })
+
+    // Rotate text
+    if(text) {
+        targetRotationZ += rotationSpeed
+        if (targetRotationZ >= maxRotation || targetRotationZ <= minRotation) {
+            rotationSpeed *= -1;
+        }
+
+        text.rotation.z += (targetRotationZ - text.rotation.z) * 0.01; // Lerping
+    }
 
     // Render
     renderer.render(scene, camera)
