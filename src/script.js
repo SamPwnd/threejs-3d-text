@@ -55,20 +55,28 @@ fontLoader.load(
 
         for (let i = 0; i < 300; i++) {
             const donut = new THREE.Mesh(donutGeometry, material)
-
-            donut.position.x = (Math.random() - 0.5) * 10
-            donut.position.y = (Math.random() - 0.5) * 10
-            donut.position.z = (Math.random() - 0.5) * 10
-
+        
+            // Generazione di un angolo casuale e un raggio casuale
+            const radius = 2 + Math.random() * 7            // Raggio casuale (tra 2 e 9) (distanza dal centro)
+            const theta = Math.random() * Math.PI * 2       // Angolo theta casuale (0 a 2π) (rotazione attorno all'asse y)
+            const phi = Math.acos((Math.random() * 2) - 1)  // Angolo phi casuale (0 a π) (dall'alto al basso)
+        
+            // Coordinate sferiche convertite in coordinate cartesiane
+            const x = radius * Math.sin(phi) * Math.cos(theta) 
+            const y = radius * Math.sin(phi) * Math.sin(theta) 
+            const z = radius * Math.cos(phi)                   
+        
+            donut.position.set(x, y, z)
+        
             donut.rotation.x = Math.random() * Math.PI
             donut.rotation.y = Math.random() * Math.PI
-
+        
             const scale = Math.random()
             donut.scale.set(scale, scale, scale)
-
+        
             scene.add(donut)
-            
         }
+        
 
     }
 )
@@ -140,8 +148,8 @@ const tick = () =>
     // animate camera
     const parallaxX = - cursor.x * 12
     const parallaxY =  cursor.y * 12
-    gsap.to(camera.position, {x: parallaxX, duration: 3});
-    gsap.to(camera.position, {y: parallaxY, duration: 3});
+    gsap.to(camera.position, {x: parallaxX, duration: 1.5});
+    gsap.to(camera.position, {y: parallaxY, duration: 1.5});
     camera.lookAt(0,0,0)
     //camera.position.z = parallaxY + 1 
 
