@@ -27,15 +27,28 @@ const matcapTexture = textureLoader.load('textures/matcaps/9.png')
  */
 const fontLoader = new FontLoader()
 
-// Meshes outside fontloader
+// outside fontloader
 const donuts = []
 let text
+
+const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+const d = new Date();
+let day = weekday[d.getDay()];
+
+const textsArray = [
+    "Hi, I'm Sam",
+    `happy ${day}`, 
+    'still we rise', 
+    'code + art \n <3 <3 <3', 
+    'to live \nto exist \nto be'
+]
+const textRandom = textsArray[Math.floor(Math.random() * textsArray.length)]
 
 fontLoader.load(
     '/fonts/helvetiker_regular.typeface.json',
     (font) => {
         const textGeometry = new TextGeometry(
-            'Lesgoski',
+            textRandom,
             {
                 font: font,
                 size: 0.5,
@@ -75,7 +88,7 @@ fontLoader.load(
             donut.rotation.x = Math.random() * Math.PI
             donut.rotation.y = Math.random() * Math.PI
         
-            const scale = Math.random()
+            const scale = Math.random() * 0.8
             donut.scale.set(scale, scale, scale)
         
             scene.add(donut)
@@ -145,21 +158,46 @@ window.addEventListener('mousemove', (event) => {
  */
 const clock = new THREE.Clock()
 
-let targetRotationZ = 0; // Obiettivo di rotazione
-let rotationSpeed = 0.005; // Velocità di rotazione
-const maxRotation = 0.5; // Limite di rotazione
-const minRotation = -0.5; // Limite di rotazione
+// text rotation
+let targetRotationZ = 0 // Obiettivo di rotazione
+let rotationSpeed = 0.005 // Velocità di rotazione
+const maxRotation = 0.5 // Limite di rotazione
+const minRotation = -0.5 // Limite di rotazione
+
+const extraMovementSpeedX = 0.004
+const extraMovementSpeedY = 0.002
+
+let extraPositionX = 0
+let extraPositionY = 0
+
+const rotationSpeedZ = 0.2
 
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
 
-    // animate camera
+    // Animate camera
+    extraPositionX += extraMovementSpeedX
+    extraPositionY += extraMovementSpeedY
+
     const parallaxX = - cursor.x * 12
     const parallaxY =  cursor.y * 12
-    gsap.to(camera.position, {x: parallaxX, duration: 1.5});
-    gsap.to(camera.position, {y: parallaxY, duration: 1.5});
+
+    gsap.to(camera.position, {
+        x: parallaxX + Math.sin(extraPositionX) * 2,
+        duration: 1.5
+    });
+    gsap.to(camera.position, {
+        y: parallaxY + Math.cos(extraPositionY) * 2, 
+        duration: 1.5
+    });
+    
     camera.lookAt(0,0,0)
+
+    camera.rotation.z = Math.sin(elapsedTime * rotationSpeedZ) * 0.5
+    console.log(camera.rotation.z);
+    
+
 
     // Rotate donuts
     donuts.forEach((donut) => {
@@ -177,10 +215,8 @@ const tick = () =>
         text.rotation.z += (targetRotationZ - text.rotation.z) * 0.01; // Lerping
     }
 
-    // Render
     renderer.render(scene, camera)
 
-    // Call tick again on the next frame
     window.requestAnimationFrame(tick)
 }
 
