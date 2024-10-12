@@ -19,8 +19,31 @@ const scene = new THREE.Scene()
 /**
  * Textures
  */
+const randomMatcap = Math.floor(Math.random() * 10)
+console.log(randomMatcap);
+
 const textureLoader = new THREE.TextureLoader()
-const matcapTexture = textureLoader.load('textures/matcaps/9.png')
+const cubeTextureLoader = new THREE.CubeTextureLoader()
+let isEnviromentMap = false
+if(randomMatcap > 7)  isEnviromentMap = true
+
+let environmentMapTexture = null
+let matcapTexture = null
+
+if(isEnviromentMap) {
+    environmentMapTexture = cubeTextureLoader.load([
+        `/textures/environmentMaps/${randomMatcap}/px.png`,
+        `/textures/environmentMaps/${randomMatcap}/nx.png`,
+        `/textures/environmentMaps/${randomMatcap}/py.png`,
+        `/textures/environmentMaps/${randomMatcap}/ny.png`,
+        `/textures/environmentMaps/${randomMatcap}/pz.png`,
+        `/textures/environmentMaps/${randomMatcap}/nz.png`,
+    ])
+}
+else {
+    matcapTexture = textureLoader.load(`textures/matcaps/${randomMatcap}.png`)
+}
+
 
 /**
  * Fonts
@@ -65,18 +88,28 @@ fontLoader.load(
         )
         textGeometry.center()
 
-        const material = new THREE.MeshMatcapMaterial()
-        material.matcap = matcapTexture
+        let material
+        if(isEnviromentMap) {
+            material = new THREE.MeshStandardMaterial()
+            material.metalness = 1
+            material.roughness = 0.1
+            material.envMap = environmentMapTexture
+        }
+        else {
+            material = new THREE.MeshMatcapMaterial()
+            material.matcap = matcapTexture
+        }
+
         text = new THREE.Mesh(textGeometry, material)
         scene.add(text)
 
         const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
         const cubeGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
 
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 340; i++) {
 
             // Generazione di un angolo casuale e un raggio casuale
-            const radius = 2 + Math.random() * 8            // Raggio casuale (tra 2 e 10) (distanza dal centro)
+            const radius = 2 + Math.random() * 12            // Raggio casuale (tra 2 e 14) (distanza dal centro)
             const theta = Math.random() * Math.PI * 2       // Angolo theta casuale (0 a 2π) (rotazione attorno all'asse y)
             const phi = Math.acos((Math.random() * 2) - 1)  // Angolo phi casuale (0 a π) (dall'alto al basso)
         
