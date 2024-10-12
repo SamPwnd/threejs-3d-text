@@ -171,6 +171,7 @@ scene.add(cameraGroup);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
+controls.maxDistance = 20
 
 // Looking for pointer (mouse or trackpad)
 const isDesktop = window.matchMedia('(pointer: fine)').matches;
