@@ -8,7 +8,7 @@ import gsap from 'gsap';
  * Base
  */
 // Debug
-const gui = new dat.GUI()
+//const gui = new dat.GUI()
 
 // Canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -29,6 +29,8 @@ const fontLoader = new FontLoader()
 
 // outside fontloader
 const donuts = []
+const cubes = []
+
 let text
 
 const weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
@@ -69,32 +71,38 @@ fontLoader.load(
         scene.add(text)
 
         const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
+        const cubeGeometry = new THREE.BoxGeometry(0.4, 0.4, 0.4)
 
         for (let i = 0; i < 300; i++) {
-            const donut = new THREE.Mesh(donutGeometry, material)
-        
+
             // Generazione di un angolo casuale e un raggio casuale
-            const radius = 2 + Math.random() * 7            // Raggio casuale (tra 2 e 9) (distanza dal centro)
+            const radius = 2 + Math.random() * 8            // Raggio casuale (tra 2 e 10) (distanza dal centro)
             const theta = Math.random() * Math.PI * 2       // Angolo theta casuale (0 a 2π) (rotazione attorno all'asse y)
             const phi = Math.acos((Math.random() * 2) - 1)  // Angolo phi casuale (0 a π) (dall'alto al basso)
         
             // Coordinate sferiche convertite in coordinate cartesiane
             const x = radius * Math.sin(phi) * Math.cos(theta) 
             const y = radius * Math.sin(phi) * Math.sin(theta) 
-            const z = radius * Math.cos(phi)                   
-        
-            donut.position.set(x, y, z)
-        
-            donut.rotation.x = Math.random() * Math.PI
-            donut.rotation.y = Math.random() * Math.PI
-        
-            const scale = Math.random() * 0.8
-            donut.scale.set(scale, scale, scale)
-        
-            scene.add(donut)
-            donuts.push(donut)
+            const z = radius * Math.cos(phi)         
+            
+            const scale = Math.random() * 0.7
+
+            const geometry = i % 2 === 0 ? donutGeometry : cubeGeometry
+            const object = new THREE.Mesh(geometry, material)
+
+            object.position.set(x, y, z);
+            object.rotation.x = Math.random() * Math.PI;
+            object.rotation.y = Math.random() * Math.PI;
+            object.scale.set(scale, scale, scale);
+
+            scene.add(object);
+
+            if (i % 2 === 0) {
+                donuts.push(object);
+            } else {
+                cubes.push(object);
+            }
         }
-        
     }
 )
 
@@ -158,12 +166,13 @@ window.addEventListener('mousemove', (event) => {
  */
 const clock = new THREE.Clock()
 
-// text rotation
+// Text rotation parameters
 let targetRotationZ = 0 // Obiettivo di rotazione
 let rotationSpeed = 0.005 // Velocità di rotazione
 const maxRotation = 0.5 // Limite di rotazione
 const minRotation = -0.5 // Limite di rotazione
 
+// Camera animation parameters
 const extraMovementSpeedX = 0.004
 const extraMovementSpeedY = 0.002
 
@@ -194,15 +203,17 @@ const tick = () =>
     
     camera.lookAt(0,0,0)
 
-    camera.rotation.z = Math.sin(elapsedTime * rotationSpeedZ) * 0.5
-    console.log(camera.rotation.z);
+    camera.rotation.z = Math.sin(elapsedTime * rotationSpeedZ) * 0.5 // Camera rotation
     
 
-
-    // Rotate donuts
+    // Rotate donuts and cubes
     donuts.forEach((donut) => {
         donut.rotation.x += 0.0009 
         donut.rotation.y += 0.0012 
+    })
+    cubes.forEach((cube) => {
+        cube.rotation.x += 0.0009 
+        cube.rotation.y += 0.0012 
     })
 
     // Rotate text
