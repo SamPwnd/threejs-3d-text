@@ -57,7 +57,7 @@ let day = weekday[d.getDay()];
 
 const textsArray = [
     "Hi, I'm Sam",
-    "lesgoski",
+    "letsgoski",
     `happy ${day}`,
     'still we rise',
     'code + art \n <3 <3 <3',
