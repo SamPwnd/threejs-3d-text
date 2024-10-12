@@ -20,7 +20,6 @@ const scene = new THREE.Scene()
  * Textures
  */
 const randomMatcap = Math.floor(Math.random() * 10)
-console.log(randomMatcap);
 
 const textureLoader = new THREE.TextureLoader()
 const cubeTextureLoader = new THREE.CubeTextureLoader()
@@ -43,7 +42,6 @@ if(isEnviromentMap) {
 else {
     matcapTexture = textureLoader.load(`textures/matcaps/${randomMatcap}.png`)
 }
-
 
 /**
  * Fonts
@@ -167,11 +165,12 @@ window.addEventListener('resize', () =>
  */
 // Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
-camera.position.x = 1
-camera.position.y = 1
-camera.position.z = 3
-scene.add(camera)
 
+camera.position.x = -50
+camera.position.y = 20
+camera.position.z = 3
+
+scene.add(camera)
 
 /**
  * Renderer
@@ -228,11 +227,11 @@ const tick = () =>
 
     gsap.to(camera.position, {
         x: parallaxX + Math.sin(extraPositionX) * 2,
-        duration: 1.5
+        duration: 1.8
     });
     gsap.to(camera.position, {
         y: parallaxY + Math.cos(extraPositionY) * 2, 
-        duration: 1.5
+        duration: 1.8
     });
     
     camera.lookAt(0,0,0)
