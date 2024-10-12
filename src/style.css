@@ -8,6 +8,12 @@ html,
 body
 {
     overflow: hidden;
+    background-color: #131313;
+    background-image: 
+        radial-gradient(#fff 1px, transparent 1px), /* Primo livello di puntini */
+        radial-gradient(#fff 1px, transparent 1px); /* Secondo livello di puntini */
+    background-size: 56px 56px; /* Distanza tra i puntini */
+    background-position: 0 0, 28px 28px;
 }
 
 .webgl
