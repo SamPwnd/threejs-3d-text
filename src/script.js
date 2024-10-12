@@ -19,12 +19,12 @@ const scene = new THREE.Scene()
 /**
  * Textures
  */
-const randomMatcap = Math.floor(Math.random() * 10)
+const randomMatcap = Math.floor(Math.random() * 9)
 
 const textureLoader = new THREE.TextureLoader()
 const cubeTextureLoader = new THREE.CubeTextureLoader()
 let isEnviromentMap = false
-if(randomMatcap > 7)  isEnviromentMap = true
+if(randomMatcap > 6)  isEnviromentMap = true
 
 let environmentMapTexture = null
 let matcapTexture = null

@@ -7,13 +7,16 @@
 html,
 body
 {
+    font-family: "VT323", monospace;
+    font-weight: 400;
+    font-style: normal;
     overflow: hidden;
     background-color: #131313;
     background-image: 
         radial-gradient(#fff 1px, transparent 1px), /* Primo livello di puntini */
         radial-gradient(#fff 1px, transparent 1px); /* Secondo livello di puntini */
-    background-size: 56px 56px; /* Distanza tra i puntini */
-    background-position: 0 0, 28px 28px;
+    background-size: 60px 60px; /* Distanza tra i puntini */
+    background-position: 0 0, 30px 30px;
 }
 
 .webgl
@@ -22,4 +25,46 @@ body
     top: 0;
     left: 0;
     outline: none;
+}
+
+.menu {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+a {
+    font-size: 1.8rem;
+    color: #fff;
+    text-decoration: none;
+    border-bottom: 1px solid #fff;
+}
+
+#portfolio:hover {
+    color: rgb(34, 211, 238);
+    border-color: rgb(34, 211, 238);
+}
+
+#mail:hover {
+    color: rgb(255, 0, 0);
+    border-color: rgb(255, 0, 0);
+}
+
+#github:hover {
+    color: rgb(171, 171, 171);
+    border-color: rgb(171, 171, 171);
+}
+
+#linkedin:hover {
+    color: #0a66c2;
+    border-color: #0a66c2;
+}
+
+#instagram:hover {
+    color: #c13584;
+    border-color: #c13584;
 }
